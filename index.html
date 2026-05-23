@@ -506,21 +506,8 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
   .blessings-layout{grid-template-columns:1.1fr 0.9fr !important;}
   #rsvp-thanks{grid-column:2;}
 }
-#bgm-btn{
-  position:fixed;bottom:1.2rem;right:1.2rem;z-index:9999;
-  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
-  background:rgba(255,228,230,0.18);backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  box-shadow:0 2px 12px rgba(0,0,0,0.35);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;transition:background 0.2s,transform 0.15s;
-  -webkit-tap-highlight-color:transparent;
-}
-#bgm-btn:active{transform:scale(0.9);}
-#bgm-btn.playing{background:rgba(255,228,230,0.32);}
-@keyframes spin-note{0%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}100%{transform:rotate(-8deg);}}
 @keyframes blink-gos{0%,100%{opacity:1;}50%{opacity:0.15;}}
-#bgm-btn.playing span{display:inline-block;animation:spin-note 1.4s ease-in-out infinite;}
+#bgm-btn{display:none;}
 </style>
 
 <!-- FOOTER -->
