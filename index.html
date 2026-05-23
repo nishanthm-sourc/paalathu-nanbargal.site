@@ -460,7 +460,7 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
     <div style="text-align:center;margin-top:2rem;">
       <div id="blast-wrap" style="position:relative;display:inline-block;">
         <canvas id="blast-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:300%;pointer-events:none;z-index:10;"></canvas>
-        <p id="blast-text" style="font-size:0.95rem;color:rgba(255,255,255,0.95);font-weight:700;letter-spacing:0.02em;line-height:1.7;position:relative;z-index:1;opacity:0;">" Nalla vaaippu once dhan varum…<br/>Miss pannita… screenshot vechu feel dhan pannuveenga 😌😂 "</p>
+        <p id="blast-text" style="font-size:0.95rem;color:rgba(255,255,255,0.95);font-weight:700;letter-spacing:0.02em;line-height:1.7;position:relative;z-index:1;">" Nalla vaaippu once dhan varum…<br/>Miss pannita… screenshot vechu feel dhan pannuveenga 😌😂 "</p>
       </div>
     </div>
   </div><!-- /container -->
@@ -667,8 +667,6 @@ document.querySelectorAll('.card,.poster-card').forEach(el=>{
   var cols=['#FFD700','#FF69B4','#FF4D6D','#00CFFF','#A855F7','#FF6B35','#00E676','#fff'];
   function pop(){
     if(fired) return; fired=true;
-    // Reveal text with blast animation
-    txt.style.animation='blastIn 0.65s cubic-bezier(0.22,1,0.36,1) forwards';
     // Setup canvas
     var W=cv.width=cv.offsetWidth, H=cv.height=cv.offsetHeight;
     var cx=W/2, cy=H/2;
