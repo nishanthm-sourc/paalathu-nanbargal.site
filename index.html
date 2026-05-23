@@ -485,9 +485,9 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
             <input class="rsvp-input" id="r-phone" type="text" placeholder="Phone Number"/>
             <textarea class="rsvp-input" id="r-msg" placeholder="Send your blessings to the couple…" rows="3" style="resize:none;"></textarea>
             <button class="glow-btn" onclick="sendRSVP()" style="justify-content:center;">Send with Love ♡</button>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1rem 0 0.5rem;">
-              <p style="font-family:'Great Vibes',cursive;font-size:1.6rem;color:rgba(255,228,230,0.75);letter-spacing:0.02em;">Game over sister</p>
-              <img src="logo-updated.png" alt="Paalathu Nanbargal" style="width:52px;height:52px;object-fit:contain;opacity:0.55;border-radius:8px;"/>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:1.2rem 0 0.6rem;">
+              <p style="font-family:'Great Vibes',cursive;font-size:2.2rem;color:rgba(255,228,230,0.9);letter-spacing:0.02em;animation:blink-gos 1.4s ease-in-out infinite;">Game over sister</p>
+              <img src="logo-updated.png" alt="Paalathu Nanbargal" style="width:72px;height:72px;object-fit:contain;opacity:0.75;border-radius:10px;"/>
             </div>
           </div>
           <div id="rsvp-thanks" style="display:none;text-align:center;padding:2rem;">
@@ -518,6 +518,7 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 #bgm-btn:active{transform:scale(0.9);}
 #bgm-btn.playing{background:rgba(255,228,230,0.32);}
 @keyframes spin-note{0%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}100%{transform:rotate(-8deg);}}
+@keyframes blink-gos{0%,100%{opacity:1;}50%{opacity:0.15;}}
 #bgm-btn.playing span{display:inline-block;animation:spin-note 1.4s ease-in-out infinite;}
 </style>
 
