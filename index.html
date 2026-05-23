@@ -282,9 +282,8 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 </head>
 <body>
 
-<audio id="weddingBgm" loop autoplay playsinline preload="auto" muted>
+<audio id="weddingBgm" loop playsinline preload="auto">
   <source src="wedding-bgm.mp3" type="audio/mpeg"/>
-  <source src="Wedding_Update_bgm.mpeg" type="audio/mpeg"/>
 </audio>
 
 <!-- NAV -->
@@ -553,14 +552,13 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// BGM: muted autoplay → unmute on first touch anywhere → button only pauses
+// BGM: start on first touchend or click (iOS trusted gestures only)
 (function(){
   const bgm=document.getElementById('weddingBgm');
   const btn=document.getElementById('bgm-btn');
   if(!bgm||!btn) return;
   bgm.volume=0.65;
   let started=false;
-  const EVTS=['pointerdown','touchstart','touchend','click'];
 
   function setPlaying(on){
     btn.classList.toggle('playing',on);
@@ -569,34 +567,22 @@ tick(); setInterval(tick,1000);
   bgm.addEventListener('play',()=>setPlaying(true));
   bgm.addEventListener('pause',()=>setPlaying(false));
 
-  // Muted autoplay — allowed on all mobile browsers
-  bgm.muted=true;
-  bgm.play().catch(()=>{});
-
-  let trying=false;
-  function unlock(){
-    if(started||trying) return;
-    trying=true;
-    bgm.muted=false;
-    bgm.volume=0.65;
+  function startAudio(){
+    if(started) return;
     bgm.play().then(()=>{
-      // Only mark started when play() actually succeeds
       started=true;
-      trying=false;
-      EVTS.forEach(ev=>document.removeEventListener(ev,unlock));
-    }).catch(()=>{
-      // This event type didn't work — reset so next event type can retry
-      trying=false;
-      bgm.muted=true;
-    });
+      document.removeEventListener('touchend',startAudio);
+      document.removeEventListener('click',startAudio);
+    }).catch(()=>{});
   }
 
-  EVTS.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));
+  // touchend and click are the only events iOS treats as trusted for audio
+  document.addEventListener('touchend',startAudio,{passive:true});
+  document.addEventListener('click',startAudio);
 
-  // Button: only pauses/resumes after music has started
   btn.addEventListener('click',function(e){
     e.stopPropagation();
-    if(!started){unlock();return;}
+    if(!started){startAudio();return;}
     bgm.paused?bgm.play().catch(()=>{}):bgm.pause();
   });
 })();
