@@ -281,7 +281,9 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 </head>
 <body>
 
-<audio id="weddingBgm" src="Wedding_Update_bgm.mpeg" loop autoplay playsinline preload="auto" muted></audio>
+<audio id="weddingBgm" loop autoplay playsinline preload="auto" muted>
+  <source src="Wedding_Update_bgm.mpeg" type="audio/mpeg"/>
+</audio>
 
 <!-- NAV -->
 <nav>
@@ -487,7 +489,7 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
             <button class="glow-btn" onclick="sendRSVP()" style="justify-content:center;">Send with Love ♡</button>
             <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:1.2rem 0 0.6rem;">
               <p style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.3rem;color:rgba(255,228,230,0.9);letter-spacing:0.12em;text-transform:uppercase;animation:blink-gos 1.4s ease-in-out infinite;">Game over sister</p>
-              <img src="logo-updated.png" alt="Paalathu Nanbargal" style="width:110px;height:110px;object-fit:contain;opacity:0.85;border-radius:12px;"/>
+              <img src="logo-updated.png" alt="Paalathu Nanbargal" style="width:150px;height:150px;object-fit:contain;opacity:0.85;border-radius:12px;"/>
             </div>
           </div>
           <div id="rsvp-thanks" style="display:none;text-align:center;padding:2rem;">
@@ -552,45 +554,50 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// Background music — muted autoplay (allowed on mobile), unmute on first touch
+// Background music — muted autoplay + unmute on first real touch/click
 (function(){
   const bgm=document.getElementById('weddingBgm');
   const btn=document.getElementById('bgm-btn');
   if(!bgm||!btn) return;
   bgm.volume=0.65;
+  let started=false;
 
   function setPlaying(on){
-    if(on){btn.classList.add('playing');btn.title='Pause music';}
-    else{btn.classList.remove('playing');btn.title='Play music';}
+    btn.classList.toggle('playing',on);
+    btn.title=on?'Pause music':'Play music';
   }
-
-  bgm.addEventListener('play',()=>{ if(!bgm.muted) setPlaying(true); });
+  bgm.addEventListener('play',()=>setPlaying(true));
   bgm.addEventListener('pause',()=>setPlaying(false));
 
-  // Start muted (autoplay allowed on all mobile browsers when muted)
+  // Muted autoplay — browsers allow this even on iOS/Android
   bgm.muted=true;
   bgm.play().catch(()=>{});
 
-  // Unmute on very first user interaction — sound starts automatically
-  function unmute(){
+  function startAudio(){
+    if(started) return;
+    started=true;
     bgm.muted=false;
     bgm.volume=0.65;
-    if(bgm.paused) bgm.play().catch(()=>{});
-    setPlaying(true);
-    document.removeEventListener('touchstart',unmute);
-    document.removeEventListener('click',unmute);
-    document.removeEventListener('scroll',unmute,true);
+    // iOS requires play() called directly inside the gesture handler
+    bgm.play().catch(()=>{
+      bgm.load();
+      bgm.muted=false;
+      bgm.play().catch(()=>{});
+    });
+    ['touchstart','touchend','click'].forEach(function(ev){
+      document.removeEventListener(ev,startAudio);
+    });
   }
-  document.addEventListener('touchstart',unmute,{passive:true,once:true});
-  document.addEventListener('click',unmute,{once:true});
-  document.addEventListener('scroll',unmute,{passive:true,capture:true,once:true});
 
-  // Button manually toggles pause/play (after unmute)
+  // touchend is more reliable than touchstart on iOS for audio unlock
+  ['touchend','touchstart','click'].forEach(function(ev){
+    document.addEventListener(ev,startAudio,{passive:true});
+  });
+
   btn.addEventListener('click',function(e){
     e.stopPropagation();
-    if(bgm.muted){ unmute(); return; }
-    if(bgm.paused){bgm.play().catch(()=>{});}
-    else{bgm.pause();}
+    if(!started){startAudio();return;}
+    bgm.paused?bgm.play().catch(()=>{}):bgm.pause();
   });
 })();
 
