@@ -268,8 +268,13 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 
 @media(max-width:767px){
   .poster-grid{grid-template-columns:1fr 1fr;}
-  .cd-grid{gap:0.5rem;}
+  .poster-card{min-height:260px;}
+  .poster-name{font-size:1.15rem;}
+  .cd-grid{gap:0.35rem;}
+  .cd-box{padding:0.9rem 0.25rem;}
+  .cd-num{font-size:clamp(1.8rem,8vw,2.5rem);}
   .nav-links{display:none;}
+  .nav-brand-script{font-size:clamp(1.1rem,5vw,1.6rem);}
   .detail-grid{grid-template-columns:1fr;}
 }
 </style>
@@ -486,7 +491,7 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
             </div>
           </div>
           <div id="rsvp-thanks" style="display:none;text-align:center;padding:2rem;">
-            <p class="font-script" style="font-size:3rem;color:#ffe4e6;">Thank You!</p>
+            <p class="font-script" style="font-size:clamp(1.8rem,8vw,3rem);color:#ffe4e6;">Thank You!</p>
             <p style="margin-top:1rem;font-size:1rem;color:rgba(255,255,255,0.7);">We are so excited to celebrate with you. See you on 25 May 2026! 🌸</p>
           </div>
         </div>
@@ -518,9 +523,9 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 
 <!-- FOOTER -->
 <footer>
-  <p class="font-script" style="font-size:3rem;color:#ffe4e6;">Ajith Kumar & Anitha</p>
+  <p class="font-script" style="font-size:clamp(1.8rem,8vw,3rem);color:#ffe4e6;">Ajith Kumar & Anitha</p>
   <p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.3em;color:rgba(255,255,255,0.35);margin-top:0.5rem;">25 · 05 · 2026 &nbsp;·&nbsp; 10:00 AM</p>
-  <p style="font-family:'Great Vibes',cursive;font-size:1.5rem;color:rgba(201,168,76,0.5);margin-top:1rem;">With Love & Joy ♡</p>
+  <p style="font-family:'Great Vibes',cursive;font-size:clamp(1.1rem,4vw,1.5rem);color:rgba(201,168,76,0.5);margin-top:1rem;">With Love & Joy ♡</p>
   <div style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.5rem;">
     <img src="logo-updated.png" alt="logo" style="width:22px;height:22px;object-fit:contain;opacity:0.5;border-radius:4px;"/>
     <p style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.3em;color:rgba(255,255,255,0.25);">Powered by @Paalathu-Nanbargal</p>
