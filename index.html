@@ -458,7 +458,10 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
 
     </div><!-- /poster-grid -->
     <div style="text-align:center;margin-top:2rem;">
-      <p style="font-size:0.95rem;color:rgba(255,255,255,0.95);font-weight:700;letter-spacing:0.02em;line-height:1.7;animation:blastIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards;">" Nalla vaaippu once dhan varum…<br/>Miss pannita… screenshot vechu feel dhan pannuveenga 😌😂 "</p>
+      <div id="blast-wrap" style="position:relative;display:inline-block;">
+        <canvas id="blast-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:300%;pointer-events:none;z-index:10;"></canvas>
+        <p id="blast-text" style="font-size:0.95rem;color:rgba(255,255,255,0.95);font-weight:700;letter-spacing:0.02em;line-height:1.7;position:relative;z-index:1;opacity:0;">" Nalla vaaippu once dhan varum…<br/>Miss pannita… screenshot vechu feel dhan pannuveenga 😌😂 "</p>
+      </div>
     </div>
   </div><!-- /container -->
 </section>
@@ -652,6 +655,61 @@ document.querySelectorAll('.card,.poster-card').forEach(el=>{
     }
   }
   type();
+})();
+
+// Paper pop burst for squad caption
+(function(){
+  var wrap=document.getElementById('blast-wrap');
+  var txt=document.getElementById('blast-text');
+  var cv=document.getElementById('blast-canvas');
+  if(!wrap||!txt||!cv) return;
+  var fired=false;
+  var cols=['#FFD700','#FF69B4','#FF4D6D','#00CFFF','#A855F7','#FF6B35','#00E676','#fff'];
+  function pop(){
+    if(fired) return; fired=true;
+    // Reveal text with blast animation
+    txt.style.animation='blastIn 0.65s cubic-bezier(0.22,1,0.36,1) forwards';
+    // Setup canvas
+    var W=cv.width=cv.offsetWidth, H=cv.height=cv.offsetHeight;
+    var cx=W/2, cy=H/2;
+    var parts=[];
+    for(var i=0;i<90;i++){
+      var a=Math.random()*Math.PI*2;
+      var spd=3+Math.random()*7;
+      parts.push({
+        x:cx+(Math.random()-0.5)*W*0.6,
+        y:cy+(Math.random()-0.5)*30,
+        vx:Math.cos(a)*spd, vy:Math.sin(a)*spd-3,
+        w:4+Math.random()*7, h:3+Math.random()*5,
+        rot:Math.random()*360, rotV:(Math.random()-0.5)*12,
+        c:cols[Math.floor(Math.random()*cols.length)],
+        life:1, decay:0.012+Math.random()*0.012
+      });
+    }
+    var ctx=cv.getContext('2d');
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      var alive=false;
+      parts.forEach(function(p){
+        if(p.life<=0) return; alive=true;
+        p.x+=p.vx; p.y+=p.vy; p.vy+=0.18;
+        p.rot+=p.rotV; p.life-=p.decay;
+        ctx.save();
+        ctx.globalAlpha=p.life;
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot*Math.PI/180);
+        ctx.fillStyle=p.c;
+        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        ctx.restore();
+      });
+      if(alive) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting) pop();
+  },{threshold:0.5});
+  obs.observe(wrap);
 })();
 </script>
 </body>
