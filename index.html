@@ -554,13 +554,14 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// Background music — muted autoplay + unmute on first real touch/click
+// BGM: muted autoplay → unmute on first touch anywhere → button only pauses
 (function(){
   const bgm=document.getElementById('weddingBgm');
   const btn=document.getElementById('bgm-btn');
   if(!bgm||!btn) return;
   bgm.volume=0.65;
   let started=false;
+  const EVTS=['pointerdown','touchstart','touchend','click'];
 
   function setPlaying(on){
     btn.classList.toggle('playing',on);
@@ -569,34 +570,25 @@ tick(); setInterval(tick,1000);
   bgm.addEventListener('play',()=>setPlaying(true));
   bgm.addEventListener('pause',()=>setPlaying(false));
 
-  // Muted autoplay — browsers allow this even on iOS/Android
+  // Muted autoplay — allowed on all mobile browsers
   bgm.muted=true;
   bgm.play().catch(()=>{});
 
-  function startAudio(){
+  function unlock(){
     if(started) return;
     started=true;
+    EVTS.forEach(ev=>document.removeEventListener(ev,unlock));
     bgm.muted=false;
     bgm.volume=0.65;
-    // iOS requires play() called directly inside the gesture handler
-    bgm.play().catch(()=>{
-      bgm.load();
-      bgm.muted=false;
-      bgm.play().catch(()=>{});
-    });
-    ['touchstart','touchend','click'].forEach(function(ev){
-      document.removeEventListener(ev,startAudio);
-    });
+    bgm.play().catch(()=>{});
   }
 
-  // touchend is more reliable than touchstart on iOS for audio unlock
-  ['touchend','touchstart','click'].forEach(function(ev){
-    document.addEventListener(ev,startAudio,{passive:true});
-  });
+  EVTS.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));
 
+  // Button: only pauses/resumes after music has started
   btn.addEventListener('click',function(e){
     e.stopPropagation();
-    if(!started){startAudio();return;}
+    if(!started){unlock();return;}
     bgm.paused?bgm.play().catch(()=>{}):bgm.pause();
   });
 })();
