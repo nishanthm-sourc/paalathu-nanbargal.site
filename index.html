@@ -573,13 +573,22 @@ tick(); setInterval(tick,1000);
   bgm.muted=true;
   bgm.play().catch(()=>{});
 
+  let trying=false;
   function unlock(){
-    if(started) return;
-    started=true;
-    EVTS.forEach(ev=>document.removeEventListener(ev,unlock));
+    if(started||trying) return;
+    trying=true;
     bgm.muted=false;
     bgm.volume=0.65;
-    bgm.play().catch(()=>{});
+    bgm.play().then(()=>{
+      // Only mark started when play() actually succeeds
+      started=true;
+      trying=false;
+      EVTS.forEach(ev=>document.removeEventListener(ev,unlock));
+    }).catch(()=>{
+      // This event type didn't work — reset so next event type can retry
+      trying=false;
+      bgm.muted=true;
+    });
   }
 
   EVTS.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));
