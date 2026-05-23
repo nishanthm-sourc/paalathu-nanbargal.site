@@ -496,6 +496,20 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
   .blessings-layout{grid-template-columns:1.1fr 0.9fr !important;}
   #rsvp-thanks{grid-column:2;}
 }
+#bgm-btn{
+  position:fixed;bottom:1.2rem;right:1.2rem;z-index:9999;
+  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(255,228,230,0.18);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  box-shadow:0 2px 12px rgba(0,0,0,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:background 0.2s,transform 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+#bgm-btn:active{transform:scale(0.9);}
+#bgm-btn.playing{background:rgba(255,228,230,0.32);}
+@keyframes spin-note{0%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}100%{transform:rotate(-8deg);}}
+#bgm-btn.playing span{display:inline-block;animation:spin-note 1.4s ease-in-out infinite;}
 </style>
 
 <!-- FOOTER -->
@@ -528,28 +542,28 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// Background music — play instantly, fallback on first touch/click
+// Background music with mobile-safe floating button
 (function(){
   const bgm=document.getElementById('weddingBgm');
-  if(!bgm) return;
+  const btn=document.getElementById('bgm-btn');
+  if(!bgm||!btn) return;
   bgm.volume=0.65;
-  bgm.muted=false;
-  // Try immediately
-  const p=bgm.play();
-  if(p!==undefined){
-    p.catch(()=>{
-      // Browser blocked autoplay — start on very first interaction
-      function unlock(){
-        bgm.play().catch(()=>{});
-        document.removeEventListener('click',unlock);
-        document.removeEventListener('touchstart',unlock);
-        document.removeEventListener('keydown',unlock);
-      }
-      document.addEventListener('click',unlock);
-      document.addEventListener('touchstart',unlock,{passive:true});
-      document.addEventListener('keydown',unlock);
-    });
+
+  function setPlaying(on){
+    if(on){btn.classList.add('playing');btn.title='Pause music';}
+    else{btn.classList.remove('playing');btn.title='Play music';}
   }
+
+  bgm.addEventListener('play',()=>setPlaying(true));
+  bgm.addEventListener('pause',()=>setPlaying(false));
+
+  btn.addEventListener('click',function(){
+    if(bgm.paused){bgm.play().catch(()=>{});}
+    else{bgm.pause();}
+  });
+
+  // Try autoplay; on mobile it will fail silently — user taps the ♪ button
+  bgm.play().catch(()=>{ setPlaying(false); });
 })();
 
 // RSVP
@@ -568,5 +582,6 @@ document.querySelectorAll('.card,.poster-card').forEach(el=>{
   io.observe(el);
 });
 </script>
+<button id="bgm-btn" title="Play music" aria-label="Toggle music"><span>♪</span></button>
 </body>
 </html>
