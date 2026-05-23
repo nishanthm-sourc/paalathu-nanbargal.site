@@ -1,0 +1,17 @@
+# Large unused files
+Wedding video.mp4
+
+# Source photos (base64-embedded in HTML)
+*.jpeg
+*.jpg
+
+# Old/replaced assets
+VN20260522_151741.gif
+wedding-bgm.mp4
+Doctor - Soul Of Doctor BGM [EXTENDED VERSION](M4A_128K).m4a.mp4
+
+# Scripts
+*.py
+
+# Editor
+.vscode/
