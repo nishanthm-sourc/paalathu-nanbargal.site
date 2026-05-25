@@ -506,7 +506,11 @@ footer{border-top:1px solid rgba(255,255,255,0.08);padding:3rem 1.5rem;text-alig
         <div>
           <div style="display:flex;flex-direction:column;gap:1rem;" id="rsvpArea">
             <input class="rsvp-input" id="r-name" type="text" placeholder="Your Full Name"/>
-            <input class="rsvp-input" id="r-phone" type="tel" placeholder="Phone Number" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+            <div style="display:flex;align-items:center;border:1px solid rgba(255,255,255,0.12);border-radius:0.9rem;background:rgba(255,255,255,0.06);transition:border-color 0.2s,background 0.2s;" id="phone-wrap">
+              <span style="padding:0.85rem 0 0.85rem 1.1rem;color:rgba(255,255,255,0.75);font-family:'Manrope',sans-serif;font-size:0.9rem;white-space:nowrap;">+91</span>
+              <span style="width:1px;height:1.2rem;background:rgba(255,255,255,0.18);margin:0 0.6rem;flex-shrink:0;"></span>
+              <input id="r-phone" type="tel" placeholder="10-digit mobile number" inputmode="numeric" pattern="[0-9]*" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'Manrope',sans-serif;font-size:0.9rem;padding:0.85rem 1.1rem 0.85rem 0;" onfocus="document.getElementById('phone-wrap').style.borderColor='rgba(251,113,133,0.5)';document.getElementById('phone-wrap').style.background='rgba(255,255,255,0.09)'" onblur="document.getElementById('phone-wrap').style.borderColor='rgba(255,255,255,0.12)';document.getElementById('phone-wrap').style.background='rgba(255,255,255,0.06)'"/>
+            </div>
             <textarea class="rsvp-input" id="r-msg" placeholder="Send your blessings to the couple…" rows="3" style="resize:none;"></textarea>
             <button class="glow-btn" onclick="sendRSVP()" style="justify-content:center;">Send with Love ♡</button>
             <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:1.2rem 0 0.6rem;">
@@ -642,13 +646,13 @@ function sendRSVP(){
   const phone=document.getElementById('r-phone').value.trim();
   const msg=document.getElementById('r-msg').value.trim();
   if(!name){alert('Please enter your name.');return;}
-  if(!phone){alert('Please enter your phone number.');return;}
+  if(!phone||phone.length!==10){alert('Please enter a valid 10-digit phone number.');return;}
   if(!msg){alert('Please send your blessings to the couple.');return;}
   const btn=document.querySelector('#rsvpArea .glow-btn');
   btn.textContent='Sending…';btn.disabled=true;
   emailjs.send('service_f62hjmr','template_ml74sbe',{
     from_name:name,
-    phone:phone,
+    phone:'+91 '+phone,
     message:msg
   }).then(function(){
     document.getElementById('rsvpArea').style.display='none';
