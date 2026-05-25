@@ -642,12 +642,14 @@ function sendRSVP(){
   const phone=document.getElementById('r-phone').value.trim();
   const msg=document.getElementById('r-msg').value.trim();
   if(!name){alert('Please enter your name.');return;}
+  if(!phone){alert('Please enter your phone number.');return;}
+  if(!msg){alert('Please send your blessings to the couple.');return;}
   const btn=document.querySelector('#rsvpArea .glow-btn');
   btn.textContent='Sending…';btn.disabled=true;
   emailjs.send('service_f62hjmr','template_ml74sbe',{
     from_name:name,
-    phone:phone||'—',
-    message:msg||'(no message)'
+    phone:phone,
+    message:msg
   }).then(function(){
     document.getElementById('rsvpArea').style.display='none';
     document.getElementById('rsvp-thanks').style.display='block';
